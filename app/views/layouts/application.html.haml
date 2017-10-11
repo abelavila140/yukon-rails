@@ -1,0 +1,33 @@
+!!! 5
+%html{land: "en"}
+  %head
+    %meta{charset: "utf-8"}
+    %meta{"http-equiv" => "utf-8", content: "IE=edge"}
+    %meta{name: "viewport", content: "width=device-width, initial-scale=1"}
+
+    %title Yukon
+
+    = csrf_meta_tags
+
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' 
+    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload' 
+
+  %body
+    %nav.navbar.navbar-dark.bg-dark.navbar-expand-md{style: 'color:red'}
+      %a.navbar-brand{:href => "#"} #{fa_icon 'calculator'} Yukon
+      %button.navbar-toggler{type: "button", data:{toggle: "collapse", target: "#navbarNavDropdown"}, "aria-controls" => "navbarNavDropdown", "aria-expanded" => "false", "aria-label" => "Toggle navigation"}
+        %span.navbar-toggler-icon
+      #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
+        %ul.navbar-nav
+          %li.nav-item.active
+            %a.nav-link{:href => "#"} 
+              Home
+              %span.sr-only (current)
+          %li.nav-item
+            %a.nav-link{:href => "#"} Features
+          %li.nav-item
+            %a.nav-link{:href => "#"} Pricing 
+        %button.btn.btn-outline-success{type: "button"} Logout
+
+    
+    = yield 

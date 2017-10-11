@@ -1,0 +1,81 @@
+.container-fluid
+  %h2.clickable{style: "padding:15px"} Dashboard
+
+.container
+  .center-tables
+    %table.table.table-hover.table-bordered
+      %tr.table-success
+        %td{style: 'width:60%'} 
+          = fa_icon "money"
+          <strong> Income </strong> 
+        %td.text-center{style: 'width:15%'} 
+          = fa_icon "calendar"
+          <strong>Date</strong>
+        %td.text-right{style: 'width:25%'} 
+          = fa_icon "bar-chart"
+          <strong>Planned</strong>
+      - @earnings.each do |u| 
+        %tr
+          %td 
+            = u.name
+          %td.text-center
+            = u.date
+          %td.text-right 
+            %span.se-noprint
+              = fa_icon "usd"
+              = u.planned
+            %span.delete-row{style: "display:none"}
+              = fa_icon "usd"
+              = u.planned
+              = link_to earning_path(u), method: :delete, style: "color:red" do
+                = fa_icon "trash"
+
+      %tr#clickable{style: "display:none"}
+        = form_for @earning, html:{id:'theForm'} do |u|
+          %td
+            = u.text_field :name, id: "textarea", size: "30x5"
+          %td.text-center
+            /%input{"data-provide" => "datepicker", :type => "text", :style => "width:100px"}
+            = u.text_field :date, :class => 'datepicker'
+          %td.text-right 
+            = fa_icon "usd"
+            = u.text_field :planned, size: "15x5"
+              
+    %a.btn.btn-primary.clickable{style: "color:white"}
+      = fa_icon 'plus'
+
+.container-fluid.row.justify-content-end
+  .alert.alert-danger.alert-dismissible.col-6.mastfoot{style: 'height:60px'}
+    %button.close{"aria-label" => "Close", "data-dismiss" => "alert", :type => 'button'}
+      &times 
+    <strong>Success!</strong> Indicates a successful or positive action.
+
+:javascript
+  $(document).ready(function() {
+    $().alert('close');
+
+    $('.datepicker').datepicker({
+      format: 'yyyy-mm-dd'
+    });
+
+    $('.clickable').click(function() {
+      $('#clickable').show('slow');
+    });
+    
+    $('#textarea').blur(function() {
+      $('#theForm').submit();
+    });
+
+    $('tr').hover(function() {
+      var span = $(this).find('span');
+      var username = $(this).find('span.se-noprint');
+      span.css("display", "block");
+      username.css("display", "none");
+    }, function() {
+      var span = $(this).find('span');
+      var username = $(this).find('span.se-noprint');
+      span.css("display", "none");
+      username.css("display", "block");
+    });
+
+  });

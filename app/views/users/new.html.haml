@@ -1,0 +1,7 @@
+%h1 This is create a new user
+
+%div 
+    = form_for @user do |f|
+        = f.label :firstname
+        = f.text_field :firstname
+        = f.submit 'Submit'
