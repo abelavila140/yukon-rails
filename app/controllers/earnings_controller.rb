@@ -2,15 +2,15 @@ class EarningsController < ApplicationController
   def index
     @earnings = Earning.all
     @earning = Earning.new
+    @total = Earning.sum(:planned)
   end
 
   def create
     @earning = Earning.create(earning_params)
     if @earning.save()
-        flash[:success] = "You have submited the information successfully!"
         redirect_to root_path
     else 
-        render 'new'
+        redirect_to root_path
     end
   end
 

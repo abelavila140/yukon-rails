@@ -19,27 +19,29 @@
           %td 
             = u.name
           %td.text-center
-            = u.date
+            = u.date.strftime("%a #{u.date.day.ordinalize}")
           %td.text-right 
             %span.se-noprint
-              = fa_icon "usd"
-              = u.planned
+              = number_to_currency(u.planned)
             %span.delete-row{style: "display:none"}
-              = fa_icon "usd"
-              = u.planned
+              = number_to_currency(u.planned)
               = link_to earning_path(u), method: :delete, style: "color:red" do
                 = fa_icon "trash"
 
       %tr#clickable{style: "display:none"}
         = form_for @earning, html:{id:'theForm'} do |u|
           %td
-            = u.text_field :name, id: "textarea", size: "30x5"
+            = u.text_field :name, id: "textarea", size: "30x5", class: "form-control", placeholder: 'Label'
           %td.text-center
             /%input{"data-provide" => "datepicker", :type => "text", :style => "width:100px"}
-            = u.text_field :date, :class => 'datepicker'
+            = u.text_field :date, :class => 'datepicker form-control', value: '11/23/2017'
           %td.text-right 
-            = fa_icon "usd"
-            = u.text_field :planned, size: "15x5"
+            = u.text_field :planned, size: "15x5", class: "form-control text-right", placeholder: '$0.00'
+      
+      %tr.table-active.text-right
+        %td{colspan: '3'}
+          <strong>Total</strong>
+          = number_to_currency(@total)
               
     %a.btn.btn-primary.clickable{style: "color:white"}
       = fa_icon 'plus'
@@ -48,15 +50,14 @@
   .alert.alert-danger.alert-dismissible.col-6.mastfoot{style: 'height:60px'}
     %button.close{"aria-label" => "Close", "data-dismiss" => "alert", :type => 'button'}
       &times 
-    <strong>Success!</strong> Indicates a successful or positive action.
+    <strong>Success!</strong> TOTAL:
+    = number_to_currency(@total)
 
 :javascript
   $(document).ready(function() {
     $().alert('close');
 
-    $('.datepicker').datepicker({
-      format: 'yyyy-mm-dd'
-    });
+    $('.datepicker').datepicker();
 
     $('.clickable').click(function() {
       $('#clickable').show('slow');
