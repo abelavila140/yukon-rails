@@ -1,61 +1,76 @@
-.container-fluid
-  %h2.clickable{style: "padding:15px"} Dashboard
-
-.container
-  .center-tables
-    %table.table.table-hover
-      %tr.table-success
-        %td 
-          = fa_icon "money"
-          <strong> Income </strong> 
-        %td.pull-right <strong>Planned</strong>
-      - @users.each do |u| 
+= form_for :user, :url => 'users/all', :html => { :method => :put } do
+  %table
+    %tr
+      %th First Name
+      %th Last Name
+    - @users.each do |user|
+      = fields_for "user[]", user do |user_fields|
         %tr
+          %td= user_fields.text_field :firstname
+          %td= user_fields.text_field :lastname
+  .actions
+    = submit_tag
+
+
+-#
+  .container-fluid
+    %h2.clickable{style: "paddsng:15px"} Dashboard
+
+  .container
+    .center-tables
+      %table.table.table-hover
+        %tr.table-success
           %td 
-            = u.id 
-          %td.pull-right 
-            %span.se-noprint
-              = u.firstname
-              = u.lastname 
-            %span.delete-row{style: "display:none"}
-              = u.firstname
-              = u.lastname
-              = link_to user_path(u), method: :delete, style: "color:red" do
-                = fa_icon "trash"
+            = fa_icon "money"
+            <strong> Income </strong> 
+          %td.pull-right <strong>Planned</strong>
+        - @users.each do |u| 
+          %tr
+            %td 
+              = u.id 
+            %td.pull-right 
+              %span.se-noprint
+                = u.firstname
+                = u.lastname 
+              %span.delete-row{style: "display:none"}
+                = u.firstname
+                = u.lastname
+                = link_to user_path(u), method: :delete, style: "color:red" do
+                  = fa_icon "trash"
 
-      %tr#clickable{style: "display:none"}
-        = form_for @user, html:{id:'theForm'} do |u|
-          %td
-          %td.pull-right 
-            = u.text_field :firstname, size: "20x12", id: "textarea"
-            = u.text_field :lastname
-              
-    %a.btn.btn-primary.clickable{style: "color:white"}
-      = fa_icon 'plus'
+        %tr#clickable{style: "display:none"}
+          = form_for @user, html:{id:'theForm'} do |u|
+            %td
+            %td.pull-right 
+              = u.text_field :firstname, size: "20x12", id: "textarea"
+              = u.text_field :lastname
+                
+      %a.btn.btn-primary.clickable{style: "color:white"}
+        = fa_icon 'plus'
 
-.container-fluid
-  %h2#clickable{style: "display:none"} Total Money Makeover
+  .container-fluid
+    %h2#clickable{style: "display:none"} Total Money Makeover
 
-:javascript
-  $(document).ready(function() {
-    $('.clickable').click(function() {
-      $('#clickable').show('slow');
+  :javascript
+    $(document).ready(function() {
+      $('.clickable').click(function() {
+        $('#clickable').show('slow');
+      });
+      
+      $('#textarea').blur(function() {
+        $('#theForm').submit();
+      });
+
+      $('tr').hover(function() {
+        var span = $(this).find('span');
+        var username = $(this).find('span.se-noprint');
+        span.css("display", "block");
+        username.css("display", "none");
+      }, function() {
+        var span = $(this).find('span');
+        var username = $(this).find('span.se-noprint');
+        span.css("display", "none");
+        username.css("display", "block");
+      });
+
     });
-    
-    $('#textarea').blur(function() {
-      $('#theForm').submit();
-    });
-
-    $('tr').hover(function() {
-      var span = $(this).find('span');
-      var username = $(this).find('span.se-noprint');
-      span.css("display", "block");
-      username.css("display", "none");
-    }, function() {
-      var span = $(this).find('span');
-      var username = $(this).find('span.se-noprint');
-      span.css("display", "none");
-      username.css("display", "block");
-    });
-
-  });
