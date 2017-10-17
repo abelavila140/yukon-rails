@@ -1,9 +1,21 @@
 .container-fluid
-  %h2.clickable{style: "padding:15px"} Dashboard
+  %h2{style: "padding:15px"} Dashboard
 
 .container
+  .row
+    .col-4
+      %h3
+        = link_to earnings_url(:month => @month.prev_month), style: 'color:black' do
+          = fa_icon "arrow-left"
+    .col.4.text-center
+      %h2
+        = @month.strftime("%B %Y")
+    .col-4.text-right
+      %h3
+        = link_to earnings_url(month: @month.next_month), style: 'color:black'  do
+          = fa_icon "arrow-right"
   .center-tables
-    %table.table.table-hover.table-bordered
+    %table.table.table-hover
       %tr.table-success
         %td{style: 'width:60%'} 
           = fa_icon "money"
@@ -14,68 +26,38 @@
         %td.text-right{style: 'width:25%'} 
           = fa_icon "bar-chart"
           <strong>Planned</strong>
+        %td 
       - @earnings.each do |u| 
-        %tr
-          %td 
-            = u.name
-          %td.text-center
-            = u.date
-          %td.text-right 
-            %span.se-noprint
-              = fa_icon "usd"
-              = u.planned
-            %span.delete-row{style: "display:none"}
-              = fa_icon "usd"
-              = u.planned
-              = link_to earning_path(u), method: :delete, style: "color:red" do
-                = fa_icon "trash"
+        = render :partial => 'fields', :locals => {:u => u, :date_field => :date}
 
       %tr#clickable{style: "display:none"}
         = form_for @earning, html:{id:'theForm'} do |u|
           %td
-            = u.text_field :name, id: "textarea", size: "30x5"
+            = u.text_field :name, id: "textarea", size: "30x5", class: "form-control", placeholder: 'Label'
           %td.text-center
-            /%input{"data-provide" => "datepicker", :type => "text", :style => "width:100px"}
-            = u.text_field :date, :class => 'datepicker'
+            = u.text_field :date, :class => 'datepicker form-control', value: @today
           %td.text-right 
-            = fa_icon "usd"
-            = u.text_field :planned, size: "15x5"
+            = u.text_field :planned, size: "15x5", class: "form-control text-right special-case", placeholder: '$0.00'
+      
+      %tr.table-active
+        %td
+          %a#add-new.btn.btn-primary.clickable{style: "color:white"}
+            = fa_icon 'plus'
+        %td.text-right{colspan: '2'}
+          %span{style: 'margin:5px'}
+          <strong>Total:</strong>
+          = number_to_currency(@total)
+        %td
               
-    %a.btn.btn-primary.clickable{style: "color:white"}
-      = fa_icon 'plus'
+.row.justify-content-end
+  .col-3.text-right.mastfoot{style: 'padding-right:50px'}
+    = link_to 'Cancel', earnings_url, id: 'cancel', class: 'btn btn-danger', style: 'display:none'
 
-.container-fluid.row.justify-content-end
-  .alert.alert-danger.alert-dismissible.col-6.mastfoot{style: 'height:60px'}
-    %button.close{"aria-label" => "Close", "data-dismiss" => "alert", :type => 'button'}
-      &times 
-    <strong>Success!</strong> Indicates a successful or positive action.
+-#
+  .container-fluid.row.justify-content-end
+    .alert.alert-danger.alert-dismissible.col-6.mastfoot{style: 'height:60px'}
+      %button.close{"aria-label" => "Close", "data-dismiss" => "alert", :type => 'button'}
+        &times 
+      <strong>Success!</strong> TOTAL:
+      = number_to_currency(@total)
 
-:javascript
-  $(document).ready(function() {
-    $().alert('close');
-
-    $('.datepicker').datepicker({
-      format: 'yyyy-mm-dd'
-    });
-
-    $('.clickable').click(function() {
-      $('#clickable').show('slow');
-    });
-    
-    $('#textarea').blur(function() {
-      $('#theForm').submit();
-    });
-
-    $('tr').hover(function() {
-      var span = $(this).find('span');
-      var username = $(this).find('span.se-noprint');
-      span.css("display", "block");
-      username.css("display", "none");
-    }, function() {
-      var span = $(this).find('span');
-      var username = $(this).find('span.se-noprint');
-      span.css("display", "none");
-      username.css("display", "block");
-    });
-
-  });

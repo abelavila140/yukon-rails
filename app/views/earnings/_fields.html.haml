@@ -1,0 +1,23 @@
+%tr
+  = form_for u, html:{id:"edit_form_#{u.id}"} do |edit|
+    %td 
+      %span.edit{id:"name_#{u.id}"}
+        = u.name
+      %span.editing{style: "display:none", id:"editing_name_#{u.id}"}
+        = edit.text_field :name, id: u.id, size: '30x5', class: 'form-control blur', value: u.name
+    %td.text-center
+      %span.edit{id: "date_#{u.id}"}
+        = u.date.strftime("%a #{u.date.day.ordinalize}")
+      %span.editing{style: "display:none", id:"editing_date_#{u.id}"}
+        = edit.text_field date_field, id: u.id, class: 'form-control blur datepicker', value: u.date.strftime("%m/%d/%Y")
+    %td.text-right 
+      %span.edit{id: "planned_#{u.id}"}
+        - if !u.planned?
+          = '$0.00'
+        - else 
+          = number_to_currency(u.planned)
+      %span.editing{style: "display:none", id:"editing_planned_#{u.id}"}
+        = edit.text_field :planned, id: u.id, class: 'form-control text-right blur', value: number_with_precision(u.planned, :precision => 2), placeholder: '0.00'
+    %td
+      = link_to earning_path(u), method: :delete, class: "icon", style: "color:gray", data: {confirm: 'Are you sure?'} do
+        = fa_icon "trash"
