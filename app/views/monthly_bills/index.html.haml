@@ -1,41 +1,41 @@
 .container-fluid
-  %h2{style: "padding:15px"} Dashboard
+  %h2{style: "padding:15px"} Monthly Bills
 
 .container
   .row
     .col-4
       %h3
-        = link_to earnings_url(:month => @month.prev_month), style: 'color:black' do
+        = link_to monthly_bills_url(:month => @month.prev_month), style: 'color:black' do
           = fa_icon "arrow-left"
     .col.4.text-center
       %h2
         = @month.strftime("%B %Y")
     .col-4.text-right
       %h3
-        = link_to earnings_url(month: @month.next_month), style: 'color:black'  do
+        = link_to monthly_bills_url(month: @month.next_month), style: 'color:black'  do
           = fa_icon "arrow-right"
   .center-tables
     %table.table.table-hover
       %tr.table-success
         %td{style: 'width:60%'} 
           = fa_icon "money"
-          <strong> Income </strong> 
+          <strong> Bill </strong> 
         %td.text-center{style: 'width:15%'} 
           = fa_icon "calendar"
-          <strong>Date</strong>
+          <strong>Due Date</strong>
         %td.text-right{style: 'width:25%'} 
           = fa_icon "bar-chart"
           <strong>Planned</strong>
         %td 
-      - @earnings.each do |u| 
-        = render :partial => 'fields', :locals => {:u => u, :date_field => :date, :date_variable => u.date, :urlpath => earning_path(u)}
+      - @bills.each do |u| 
+        = render :partial => 'earnings/fields', :locals => {:u => u, :date_field => :due_date, :date_variable => u.due_date, :urlpath => monthly_bill_path(u)}
 
       %tr#clickable{style: "display:none"}
-        = form_for @earning, html:{id:'theForm'} do |u|
+        = form_for @bill, html:{id:'theForm'} do |u|
           %td
             = u.text_field :name, id: "textarea", size: "30x5", class: "form-control", placeholder: 'Label'
           %td.text-center
-            = u.text_field :date, :class => 'datepicker form-control', value: @today
+            = u.text_field :due_date, :class => 'datepicker form-control', value: @today
           %td.text-right 
             = u.text_field :planned, size: "15x5", class: "form-control text-right special-case", placeholder: '$0.00'
       
@@ -44,14 +44,11 @@
           %a#add-new.btn.btn-primary.clickable{style: "color:white"}
             = fa_icon 'plus'
         %td.text-right{colspan: '2'}
-          %span{style: 'margin:5px'}
-          <strong>Total:</strong>
-          = number_to_currency(@total)
         %td
               
 .row.justify-content-end
   .col-3.text-right.mastfoot{style: 'padding-right:50px'}
-    = link_to 'Cancel', earnings_url, id: 'cancel', class: 'btn btn-danger', style: 'display:none'
+    = link_to 'Cancel', monthly_bills_url, id: 'cancel', class: 'btn btn-danger', style: 'display:none'
 
 -#
   .container-fluid.row.justify-content-end

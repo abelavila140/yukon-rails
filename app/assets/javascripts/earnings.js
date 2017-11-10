@@ -16,6 +16,10 @@ $(document).ready( function() {
     event.preventDefault();
   });
 
+  $('a[data-remote]').on('ajax:success', function() {
+    alert('This was deleted');
+  });
+
   $('.datepicker').datepicker();
 
   $('.clickable').click(function() {
