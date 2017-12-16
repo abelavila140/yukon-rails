@@ -1,0 +1,22 @@
+version: "3.3"
+services:
+  web:
+    build: .
+    networks:
+      - default
+    ports:
+      - "3000:3000"
+      - "1080:1080"
+    volumes:
+      - .:/var/www/html
+    command: dockerup
+    depends_on:
+      - db
+  db:
+    image: mysql:latest
+    ports: 
+      - "33061:3306"
+    networks:
+      - default
+    environment:
+      MYSQL_ROOT_PASSWORD: guest
