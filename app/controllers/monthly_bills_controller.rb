@@ -6,6 +6,7 @@ class MonthlyBillsController < ApplicationController
     month_start = @month.beginning_of_month
     month_end = @month.end_of_month
     @bills = MonthlyBill.where(due_date: month_start..month_end).order(:due_date)
+    @total = @bills.sum(:planned)
   end
 
   def create 

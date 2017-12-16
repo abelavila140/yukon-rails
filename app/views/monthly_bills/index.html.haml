@@ -43,7 +43,10 @@
         %td
           %a#add-new.btn.btn-primary.clickable{style: "color:white"}
             = fa_icon 'plus'
-        %td.text-right{colspan: '2'}
+        %td.text-right{colspan: '2'} 
+          %span{style: 'margin:5px'}
+          <strong>Total:</strong>
+          = number_to_currency(@total)
         %td
               
 .row.justify-content-end
